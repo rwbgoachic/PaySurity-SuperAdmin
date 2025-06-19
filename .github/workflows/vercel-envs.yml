@@ -1,0 +1,27 @@
+name: Sync Vercel Environment
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  sync-envs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Add Vercel env vars
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          vercel env add SUPABASE_URL production $SUPABASE_URL --yes
+          vercel env add SUPABASE_ANON_KEY production $SUPABASE_ANON_KEY --yes
+          vercel env add SUPABASE_SERVICE_ROLE_KEY production $SUPABASE_SERVICE_ROLE_KEY --yes
